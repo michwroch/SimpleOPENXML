@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
@@ -336,15 +336,15 @@ namespace OpenXML_Driver
 
         void Excel03to07(string fileName)
         {
-            if (File.Exists(Path.GetTempPath() + "EMMA2\\PEARR\\temporary.xlsm"))
-                File.Delete(Path.GetTempPath() + "EMMA2\\PEARR\\temporary.xlsm");
+            if (File.Exists(Path.GetTempPath() + "OXMLDriv\\temporary.xlsm"))
+                File.Delete(Path.GetTempPath() + "OXMLDriv\\temporary.xlsm");
 
-            if (!Directory.Exists(Path.GetTempPath() + "EMMA2"))
-                Directory.CreateDirectory(Path.GetTempPath() + "EMMA2");
-            if (!Directory.Exists(Path.GetTempPath() + "EMMA2\\PEARR"))
-                Directory.CreateDirectory(Path.GetTempPath() + "EMMA2\\PEARR");
+            if (!Directory.Exists(Path.GetTempPath() + "OXMLDriv"))
+                Directory.CreateDirectory(Path.GetTempPath() + "OXMLDriv");
+            if (!Directory.Exists(Path.GetTempPath() + "OXMLDriv"))
+                Directory.CreateDirectory(Path.GetTempPath() + "OXMLDriv");
 
-            string svfileName = Path.GetTempPath() + "EMMA2\\PEARR\\temporary.xlsm";
+            string svfileName = Path.GetTempPath() + "OXMLDriv\\temporary.xlsm";
 
             Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
             excelApp.Visible = false;
@@ -373,13 +373,14 @@ namespace OpenXML_Driver
             if (Path.GetExtension(filename) == ".xls")
             {
                 Excel03to07(filename);
-                fileName = Path.GetTempPath() + "EMMA2\\PEARR\\temporary.xlsm";
+                fileName = Path.GetTempPath() + "OXMLDriv\\temporary.xlsm";
             }
             
             using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 using (SpreadsheetDocument doc = SpreadsheetDocument.Open(fs, false))
                 {
+                    Debug.WriteLine(doc.WorkbookPart);
                     WorkbookPart workbookPart = doc.WorkbookPart;
                     SharedStringTablePart sstpart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
                     SharedStringTable sst = sstpart.SharedStringTable;
@@ -449,19 +450,10 @@ namespace OpenXML_Driver
                     //catch { }
                 }
             }
-            if (File.Exists(Path.GetTempPath() + "EMMA2\\PEARR\\temporary.xlsm"))
-                File.Delete(Path.GetTempPath() + "EMMA2\\PEARR\\temporary.xlsm");
+            if (File.Exists(Path.GetTempPath() + "OXMLDriv\\temporary.xlsm"))
+                File.Delete(Path.GetTempPath() + "OXMLDriv\\temporary.xlsm");
         }
 
-        void Check()
-        {
-            Regex rx = new Regex(@"([A-Z]{1,}[0-9]{1,})|(\$[A-Z]{1,}\$[0-9]{1,})");
-            var col = rx.Matches("IF(B48>\" \",IF(LEFT(B48,3)=\"bl.\",MID(B48,4,2)/1000*7850,IF(LEFT(B48,3)=\"Br.\",MID(B48,4,2)/1000*7850,INDEX([1]PROFILE!$I$1:$I$15000,MATCH(B48,[1]PROFILE!$A$1:$A$15000,0),1))),\"\")");
-            foreach (var c in col)
-            {
-                Debug.WriteLine(c);
-            }
-        }
     }
 
     public class ExcelCell
