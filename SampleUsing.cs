@@ -23,7 +23,7 @@ PrintExcel report = new PrintExcel();
 
                 arkusz.PageSetup(new double[] { 0.4, 0.4, 0.4, 0.4, 0.2, 0.2 });
                 report.AddSheet(arkusz, "NAZWA Arkusza");
-                report.PrintPage("NAZWA Arkusza", "A1:D8");
+                report.PrintPage("NAZWA_Arkusza", "A1:D8");
  
                 
                 Arkusz arkusz2 = new Arkusz();
@@ -37,7 +37,7 @@ PrintExcel report = new PrintExcel();
 
                 report.AddSheet(arkusz2, "NAZWA Arkusza2");
                 arkusz2.PageSetup(new double[] { 0.8, 0.8, 0.8, 0.8, 0.5, 0.5 });
-                report.PrintPage("NAZWA Arkusza2", "A1:G8");
+                report.PrintPage("NAZWA_Arkusza2", "A1:G8");
 
                 report.Save();
             }
@@ -47,3 +47,22 @@ PrintExcel report = new PrintExcel();
 
             Console.WriteLine("Excel file has created!");
         }
+
+
+/* Read Excel files
+This return:
+A1:B2 -> Test Test Test Test Test Test Test Test Test
+K3 -> Test
+D4:E4 -> 3.6
+*/
+ReportRead Reportreader = new ReportRead();
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\Report.xlsx";
+            Reportreader.GetExcelWorkSheet(path, "NAZWA_Arkusza2");
+
+            foreach(var cell in Reportreader.ExcelCells)
+            {
+                Debug.WriteLine(string.Format("{0} -> {1}", cell.Zakres, cell.Value));
+            }
+
+
+
